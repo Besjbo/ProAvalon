@@ -1,11 +1,11 @@
-class Isolde {
+class Watari {
     constructor(thisRoom) {
         this.thisRoom = thisRoom;
         
-        this.role = "Isolde";
-        this.alliance = "Resistance";
+        this.role = "Watari";
+        this.alliance = "Detective";
         
-        this.description = "Tristan and Isolde both see each other.";
+        this.description = "Watari sees L.";
         this.orderPriorityInOptions = 50;
     }
     
@@ -13,9 +13,9 @@ class Isolde {
         var roleTag = {};
         
         for (var i = 0; i < this.thisRoom.playersInGame.length; i++) {
-            if (this.thisRoom.playersInGame[i].role === "Tristan") {
+            if (this.thisRoom.playersInGame[i].role === "L") {
                 roleTag[this.thisRoom.playersInGame[i].username] = {};
-                roleTag[this.thisRoom.playersInGame[i].username].roleTag = "Tristan";
+                roleTag[this.thisRoom.playersInGame[i].username].roleTag = "L";
             }
         }
         
@@ -24,4 +24,4 @@ class Isolde {
 };
 
 
-module.exports = Isolde;
+module.exports = Watari;
