@@ -1,19 +1,19 @@
 
-class Merlin {
+class L {
     constructor(thisRoom) {
         
         this.thisRoom = thisRoom;
         
-        this.role = "Merlin";
-        this.alliance = "Resistance";
+        this.role = "L";
+        this.alliance = "Detective";
         
-        this.description = "Knows the identity of the spies.";
+        this.description = "Knows the identity of investigated players.";
         this.orderPriorityInOptions = 100;
         
         this.test = function () {
             // The following lines running successfully shows that each role file can access
             // the variables and functions from the game room!
-            console.log("HII from merlin. The number of sockets is: " + this.thisRoom.allSockets.length);
+            console.log("HII from L. The number of sockets is: " + this.thisRoom.allSockets.length);
         }
     };
     
