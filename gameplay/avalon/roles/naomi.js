@@ -1,11 +1,11 @@
-class Percival {
+class Naomi {
     constructor(thisRoom) {
         this.thisRoom = thisRoom;
         
-        this.role = "Percival";
+        this.role = "Naomi";
         this.alliance = "Resistance";
         
-        this.description = "Knows the identity of Merlin and Morgana.";
+        this.description = "Knows the identity of L and Light.";
         this.orderPriorityInOptions = 80;
         
         this.test = function () {
@@ -20,14 +20,14 @@ class Percival {
             this.thisRoom.io.in(this.thisRoom.roomId).emit("roomChatToClient", data);
         }
     }
-    // Percival sees Merlin and Morgana
+    // Naomi sees L and Light
     see () {
         var roleTag = {};
         
         for (var i = 0; i < this.thisRoom.playersInGame.length; i++) {
-            if (this.thisRoom.playersInGame[i].role === "Merlin" || this.thisRoom.playersInGame[i].role === "Morgana") {
+            if (this.thisRoom.playersInGame[i].role === "L" || this.thisRoom.playersInGame[i].role === "Light Yagami") {
                 roleTag[this.thisRoom.playersInGame[i].username] = {};
-                roleTag[this.thisRoom.playersInGame[i].username].roleTag = "Merlin?";
+                roleTag[this.thisRoom.playersInGame[i].username].roleTag = "L?";
             }
         }
         
@@ -36,4 +36,4 @@ class Percival {
 }
 
 
-module.exports = Percival;
+module.exports = Naomi;
