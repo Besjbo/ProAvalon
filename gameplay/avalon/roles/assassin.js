@@ -1,31 +1,31 @@
 var usernamesIndexes = require("../../../myFunctions/usernamesIndexes");
 
-class Assassin {
+class Mikami {
     constructor(thisRoom) {
         this.thisRoom = thisRoom;
         
         this.specialPhase = "assassination";
         
-        this.role = "Assassin";
-        this.alliance = "Spy";
+        this.role = "Mikami";
+        this.alliance = "Kira";
         
-        this.description = "If the resistance win 3 missions, the Assassin can shoot one person for Merlin, or two people for Tristan and Isolde. If they are correct, the spies win!";
+        this.description = "If the detectives capture Light, Mikami can assassinate every detective as their specific role. If he is correct, Kira wins!";
         this.orderPriorityInOptions = 90;
         
         this.playerShot = "";
         this.playerShot2 = "";
     }
-    //Assassin sees all spies except oberon
+    //Mikami sees Light but not Misa
     see () {
         if (this.thisRoom.gameStarted === true) {
             var obj = {};
             var array = [];
             
             for (var i = 0; i < this.thisRoom.playersInGame.length; i++) {
-                if (this.thisRoom.playersInGame[i].alliance === "Spy") {
+                if (this.thisRoom.playersInGame[i].alliance === "Kira") {
                     
-                    if (this.thisRoom.playersInGame[i].role === "Oberon") {
-                        //don't add oberon
+                    if (this.thisRoom.playersInGame[i].role === "Misa") {
+                        //don't add Misa
                     }
                     else {
                         //add the spy
@@ -52,28 +52,10 @@ class Assassin {
                     if (this.thisRoom.missionHistory[i] === "succeeded") {
                         numOfSuccesses++;
                     }
+         
                 }
                 
-                // Check if Merlin exists.
-                var merlinExists = false;
-                // Check if iso tristan are both in the game.
-                var tristExists = false;
-                var isoExists = false;
-                
-                for (var i = 0; i < this.thisRoom.playersInGame.length; i++) {
-                    if (this.thisRoom.playersInGame[i].role === "Merlin") {
-                        merlinExists = true;
-                    }
-                    if (this.thisRoom.playersInGame[i].role === "Tristan") {
-                        tristExists = true;
-                    }
-                    
-                    if (this.thisRoom.playersInGame[i].role === "Isolde") {
-                        isoExists = true;
-                    }
-                }
-                
-                if (numOfSuccesses === 3 && ((merlinExists === true) || (tristExists === true && isoExists === true))) {
+                if (numOfSuccesses === 4 ) {
                     // Set the assassination phase
                     this.thisRoom.startAssassinationTime = new Date();
                     this.thisRoom.phase = this.specialPhase;
@@ -98,4 +80,4 @@ class Assassin {
     }
 }
 
-module.exports = Assassin;
+module.exports = Mikami;
