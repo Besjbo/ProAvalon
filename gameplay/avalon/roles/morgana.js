@@ -1,23 +1,23 @@
 
 
-class Morgana {
+class Light {
     constructor(thisRoom) {
         this.thisRoom = thisRoom;
         
-        this.role = "Morgana";
-        this.alliance = "Spy";
+        this.role = "Light Yagami";
+        this.alliance = "Kira";
         
-        this.description = "A spy who looks like Merlin to Percival.";
+        this.description = "The Kira leader, who has the power to kill L.";
         this.orderPriorityInOptions = 70;
     }
-    //Morgana sees all spies except oberon
+    //Light sees all Kiras
     see () {
         if (this.thisRoom.gameStarted === true) {
             var obj = {};
             var array = [];
             
             for (var i = 0; i < this.thisRoom.playersInGame.length; i++) {
-                if (this.thisRoom.playersInGame[i].alliance === "Spy") {
+                if (this.thisRoom.playersInGame[i].alliance === "Kira") {
                     
                     if (this.thisRoom.playersInGame[i].role === "Oberon") {
                         //don't add oberon
@@ -41,4 +41,4 @@ class Morgana {
 }
 
 
-module.exports = Morgana;
+module.exports = Light;
