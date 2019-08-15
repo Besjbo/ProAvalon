@@ -1,11 +1,11 @@
-class Oberon {
+class Misa {
     constructor(thisRoom) {
         this.thisRoom = thisRoom;
         
-        this.role = "Oberon";
-        this.alliance = "Spy";
+        this.role = "Misa";
+        this.alliance = "Kira";
         
-        this.description = "Oberon and Spies do not know each other."
+        this.description = "Misa does not see her teammates."
         this.orderPriorityInOptions = 50;
     }
     //Oberon only sees him/herself
@@ -15,7 +15,7 @@ class Oberon {
             var array = [];
             
             for (var i = 0; i < this.thisRoom.playersInGame.length; i++) {
-                if (this.thisRoom.playersInGame[i].role === "Oberon") {
+                if (this.thisRoom.playersInGame[i].role === "Misa") {
                     array.push(this.thisRoom.playersInGame[i].username);
                     break;
                 }
@@ -33,4 +33,4 @@ class Oberon {
 }
 
 
-module.exports = Oberon;
+module.exports = Misa;
