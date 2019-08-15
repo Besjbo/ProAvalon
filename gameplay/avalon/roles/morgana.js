@@ -11,29 +11,30 @@ class Light {
         this.orderPriorityInOptions = 70;
     }
     //Light sees all Kiras
-    see () {
-        if (this.thisRoom.gameStarted === true) {
-            var obj = {};
-            var array = [];
-            
-            for (var i = 0; i < this.thisRoom.playersInGame.length; i++) {
-                if (this.thisRoom.playersInGame[i].alliance === "Kira") {
-                    
-                    if (this.thisRoom.playersInGame[i].role === "Oberon") {
-                        //don't add oberon
-                    }
-                    else {
-                        //add the spy
-                        array.push(this.thisRoom.playersInGame[i].username);
-                    }
-                }
+        see () {
+        var roleTag = {};
+        
+        for (var i = 0; i < this.thisRoom.playersInGame.length; i++) {
+            if (this.thisRoom.playersInGame[i].role === "Misa") {
+                roleTag[this.thisRoom.playersInGame[i].username] = {};
+                roleTag[this.thisRoom.playersInGame[i].username].roleTag = "Misa";
             }
-            
-            obj.spies = array;
-            return obj;
         }
+        
+        return roleTag;
     }
-    
+        see () {
+        var roleTag = {};
+        
+        for (var i = 0; i < this.thisRoom.playersInGame.length; i++) {
+            if (this.thisRoom.playersInGame[i].role === "Mikami") {
+                roleTag[this.thisRoom.playersInGame[i].username] = {};
+                roleTag[this.thisRoom.playersInGame[i].username].roleTag = "Mikami";
+            }
+        }
+        
+        return roleTag;
+    }
     checkSpecialMove () {
         
     }
