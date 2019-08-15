@@ -1,12 +1,12 @@
 
-class Resistance {
+class Matsuda {
     constructor(thisRoom) {
         this.thisRoom = thisRoom;
         
-        this.role = "Resistance";
-        this.alliance = "Resistance";
+        this.role = "Matsuda";
+        this.alliance = "Detective";
         
-        this.description = "A standard Resistance member.";
+        this.description = "A Detective member.";
     }
     see () {
         return undefined;
@@ -19,4 +19,4 @@ class Resistance {
 }
 
 
-module.exports = Resistance;
+module.exports = Matsuda;
