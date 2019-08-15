@@ -10,14 +10,13 @@
 
 var usernamesIndexes = require("../../../myFunctions/usernamesIndexes");
 
-class Lady {
+class Fail {
     constructor(thisRoom) {
         this.thisRoom = thisRoom;
         
-        this.phase = "lady";
+        this.phase = "fail";
         this.showGuns = false;
-        
-        this.card = "Lady of the Lake";
+       
     };
     
     gameMove (socket, buttonPressed, selectedPlayers) {
@@ -83,14 +82,14 @@ class Lady {
             var alliance = this.thisRoom.playersInGame[targetIndex].alliance;
             
             //emit to the lady holder the person's alliance
-            socket.emit("lady-info", /*"Player " + */targetUsername + " is a " + alliance + ".");
+            socket.emit("lady-info", /*"Player " + */targetUsername + " is " + alliance + ".");
             // console.log("Player " + target + " is a " + alliance);
             
             //update lady location
             this.thisRoom.specialCards[this.card.toLowerCase()].setHolder(targetIndex);
             
             // this.gameplayMessage = (socket.request.user.username + " has carded " + target);
-            this.thisRoom.sendText(this.thisRoom.allSockets, (socket.request.user.username + " has used " + this.card + " on " + targetUsername + "."), "gameplay-text");
+            this.thisRoom.sendText(this.thisRoom.allSockets, ("The Kira supporter has investigated" + targetUsername + "."), "gameplay-text");
             
             
             //update phase
@@ -155,12 +154,12 @@ class Lady {
         var indexOfCardHolder = this.thisRoom.specialCards[this.card.toLowerCase()].indexOfPlayerHolding;
         
         if (indexOfPlayer === indexOfCardHolder) {
-            return "Choose a player to use the Lady of the Lake on.";
+            return "Choose a player to investigate.";
         }
         // If it is any other player who isn't special role
         else {
             var usernameOfCardHolder = this.thisRoom.playersInGame[indexOfCardHolder].username;
-            return "Waiting for " + usernameOfCardHolder + " to use the Lady of the Lake on someone."
+            return "Waiting for the Kira supporter to investigate someone."
         }
     }
     
