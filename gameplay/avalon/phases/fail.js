@@ -79,14 +79,12 @@ class Fail {
             }
             
             //grab the target's alliance
-            var alliance = this.thisRoom.playersInGame[targetIndex].alliance;
+            var role = this.thisRoom.playersInGame[targetIndex].role;
             
             //emit to the lady holder the person's alliance
-            socket.emit("lady-info", /*"Player " + */targetUsername + " is " + alliance + ".");
+            socket.emit("fail-info", /*"Player " + */targetUsername + " is " + role + ".");
             // console.log("Player " + target + " is a " + alliance);
             
-            //update lady location
-            this.thisRoom.specialCards[this.card.toLowerCase()].setHolder(targetIndex);
             
             // this.gameplayMessage = (socket.request.user.username + " has carded " + target);
             this.thisRoom.sendText(this.thisRoom.allSockets, ("The Kira supporter has investigated" + targetUsername + "."), "gameplay-text");
@@ -97,7 +95,7 @@ class Fail {
         }
         // The requester is not the lady holder. Ignore the request.
         else {
-            socket.emit("danger-alert", "You do not hold the card.");
+            socket.emit("danger-alert", "You did not fail the investigation.");
             
             return;
         }
