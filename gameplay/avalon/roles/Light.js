@@ -35,11 +35,27 @@ class Light {
         
         return roleTag;
     }
+
+    see () {
+        if (this.thisRoom.gameStarted === true) {
+            var obj = {};
+            var array = [];
+            
+            for (var i = 0; i < this.thisRoom.playersInGame.length; i++) {
+                if (this.thisRoom.playersInGame[i].alliance === "Kira") {
+                        array.push(this.thisRoom.playersInGame[i].username);
+                    }
+                }
+            }
+            
+            obj.spies = array;
+            return obj;
+        }
+    }
+}
+
     checkSpecialMove () {
         
     }
-    
-}
-
 
 module.exports = Light;
