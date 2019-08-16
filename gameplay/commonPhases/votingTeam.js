@@ -38,13 +38,22 @@ VotingTeam.prototype.gameMove = function (socket, buttonPressed, selectedPlayers
 
 
             var outcome = calcVotes(this.thisRoom.votes);
+            var escaped = calcEscape(this.thisRoom.proposedTeam);
+            
+            if (outcome === "yes" && this.thisRoom.missionNum === 4 && escaped === "yes") {
+               this.thisRoom.missionHistory[this.thisRoom.missionHistory.length] = "failed";
 
-            if (outcome === "yes" && this.thisRoom.missionNum === 4) {
+                this.thisRoom.howWasWon = "Kira escaped.";
+                this.thisRoom.sendText(this.thisRoom.allSockets, "Kira has escaped.", "gameplay-text-red");
+
+                this.thisRoom.finishGame("Kira");
+                
+           else if (outcome === "yes" && this.thisRoom.missionNum === 4) {
                 this.thisRoom.phase = "finished";
 
                 var str = "Showdown 4." + this.thisRoom.pickNum + " was approved." + getStrApprovedRejectedPlayers(this.thisRoom.votes, this.thisRoom.playersInGame);
-                this.thisRoom.sendText(this.thisRoom.allSockets, str, "gameplay-text");
-            }
+                this.thisRoom.sendText(this.thisRoom.allSockets, str, "gameplay-text")
+               
             else if (outcome === "yes") {
                 this.thisRoom.phase = "votingMission";
                 this.thisRoom.playersYetToVote = this.thisRoom.proposedTeam.slice();
@@ -215,9 +224,19 @@ function calcVotes(votes) {
 
     return outcome;
 }
-
-
-
+function calcEscape(this.thisRoom.proposedTeam) {
+    var numPlayersonMission = this.thisRoom.proposedTeam.length;
+    var escaped;
+for (var i = 0; i < numPlayersonMission; i++) {
+            if (this.thisRoom.proposedTeam[i].role === "Light Yagami") {
+            escaped = "no";
+            }
+    else {
+        escaped = "yes";
+    }
+    
+    return escaped;
+}
 
 
 
