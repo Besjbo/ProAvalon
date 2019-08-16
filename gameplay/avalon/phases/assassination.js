@@ -13,7 +13,7 @@ class Assassination {
         this.thisRoom = thisRoom;
         
         // The role that is the owner of this phase
-        this.role = "Assassin";
+        this.role = "Mikami";
         
         this.phase = "assassination";
         this.showGuns = true;
@@ -46,22 +46,45 @@ class Assassination {
                         // Check the alliance of the target. If they are spy, reject it and ask them to shoot a res.
                         // Note: Allowed to shoot Oberon
                         if (this.thisRoom.playersInGame[indexOfTarget].alliance === "Spy" &&
-                        this.thisRoom.playersInGame[indexOfTarget].role !== "Oberon") {
+                        this.thisRoom.playersInGame[indexOfTarget].role !== "Misa") {
                             
                             socket.emit("danger-alert", "You are not allowed to shoot a known spy.");
                             return;
                         }
                         
-                        // Get merlin's username
-                        var merlinUsername = undefined;
+                        // Get L's username
+                        var LUsername = undefined;
                         for (var i = 0; i < this.thisRoom.playersInGame.length; i++) {
-                            if (this.thisRoom.playersInGame[i].role === "Merlin") {
-                                merlinUsername = this.thisRoom.playersInGame[i].username;
+                            if (this.thisRoom.playersInGame[i].role === "L") {
+                                LUsername = this.thisRoom.playersInGame[i].username;
                             }
                         }
                         
+                        // Get Matsuda's username
+                        var MatsudaUsername = undefined;
+                        for (var i = 0; i < this.thisRoom.playersInGame.length; i++) {
+                            if (this.thisRoom.playersInGame[i].role === "Matsuda") {
+                                MatsudaUsername = this.thisRoom.playersInGame[i].username;
+                            }
+                        }                       
+                        
+                        // Get Naomi's username
+                        var NaomiUsername = undefined;
+                        for (var i = 0; i < this.thisRoom.playersInGame.length; i++) {
+                            if (this.thisRoom.playersInGame[i].role === "Naomi") {
+                                NaomiUsername = this.thisRoom.playersInGame[i].username;
+                            }
+                        }                        
+                        
+                        // Get Watari's username
+                        var WatariUsername = undefined;
+                        for (var i = 0; i < this.thisRoom.playersInGame.length; i++) {
+                            if (this.thisRoom.playersInGame[i].role === "Watari") {
+                                WatariUsername = this.thisRoom.playersInGame[i].username;
+                            }
+                        }
                         //set the player shot in the assassin role object
-                        this.thisRoom.specialRoles["assassin"].playerShot = selectedPlayers;
+                        this.thisRoom.specialRoles["Mikami"].playerShot = selectedPlayers;
                         
                         if (indexOfTarget !== -1) {
                             if (this.thisRoom.playersInGame[indexOfTarget].role === "Merlin") {
@@ -292,7 +315,7 @@ class Assassination {
         var spyIndexes = [];
         
         for (var i = 0; i < this.thisRoom.playersInGame.length; i++) {
-            if (this.thisRoom.playersInGame[i].alliance === "Spy" && this.thisRoom.playersInGame[i].role !== "Oberon") {
+            if (this.thisRoom.playersInGame[i].alliance === "Kira" && this.thisRoom.playersInGame[i].role !== "Misa") {
                 spyIndexes.push(i);
             }
         }
