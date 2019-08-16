@@ -126,7 +126,7 @@ VotingMission.prototype.gameMove = function (socket, buttonPressed, selectedPlay
             }
 
             this.thisRoom.hammer = ((this.thisRoom.teamLeader - 5 + 1 + this.thisRoom.playersInGame.length) % this.thisRoom.playersInGame.length);
-            this.thisRoom.phase = "Fail";
+            this.thisRoom.phase = "supporterFail";
         }
     }
 };
