@@ -89,18 +89,21 @@ VotingMission.prototype.gameMove = function (socket, buttonPressed, selectedPlay
         }
 
 
-        //game over if more than 3 fails or successes
-        if (numOfFails >= 3) {
-            this.thisRoom.winner = "Spy";
-            this.thisRoom.finishGame("Spy");
+        //go to next investigation if success
+        if (outcome === "succeeded") {
+             this.thisRoom.missionNum++;
+            this.thisRoom.pickNum = 1;
+            
+            this.thisRoom.teamLeader--;
+            if (this.thisRoom.teamLeader < 0) {
+                this.thisRoom.teamLeader = this.thisRoom.playersInGame.length - 1;
+            }
+
+            this.thisRoom.hammer = ((this.thisRoom.teamLeader - 5 + 1 + this.thisRoom.playersInGame.length) % this.thisRoom.playersInGame.length);
+            this.thisRoom.phase = "pickingTeam";
         }
-        else if (numOfSucceeds >= 3) {
-            this.thisRoom.winner = "Resistance";
-            this.thisRoom.finishGame("Resistance");
-        }
-        // If the game goes on
+        //If the investigation repeats
         else {
-            this.thisRoom.missionNum++;
             this.thisRoom.pickNum = 1;
             
             this.thisRoom.teamLeader--;
