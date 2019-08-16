@@ -48,7 +48,8 @@ VotingMission.prototype.gameMove = function (socket, buttonPressed, selectedPlay
         else {
             console.log("ERROR! Outcome was: " + outcome);
         }
-
+        var numofKiraFail = KiraFail(this.thisRoom.missionVotes);
+    }
         var numOfVotedFails = countFails(this.thisRoom.missionVotes);
         this.thisRoom.numFailsHistory.push(numOfVotedFails);
 
@@ -163,7 +164,7 @@ VotingMission.prototype.getStatusMessage = function (indexOfPlayer) {
     // If we are spectator
     if (indexOfPlayer === -1) {
         var str = "";
-        str += "Waiting for mission votes: ";
+        str += "Waiting for investigation votes: ";
         for (var i = 0; i < this.thisRoom.playersYetToVote.length; i++) {
             str = str + this.thisRoom.playersYetToVote[i] + ", ";
         }
@@ -213,6 +214,15 @@ function countFails(votes) {
     return numOfVotedFails;
 }
 
+function KiraFail(votes) {
+   var numofKiraFail = 0; 
+for (var i = 0; i < votes.length; i++) {
+            if (votes[i] === "fail" && this.thisRoom.playersInGame[i].role === "Light Yagami") {
+            numofKiraFail++;      
+            }
+        }
+    return numofKiraFail;
+}
 
 
 
