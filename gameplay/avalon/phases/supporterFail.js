@@ -10,11 +10,11 @@
 
 var usernamesIndexes = require("../../../myFunctions/usernamesIndexes");
 
-class Fail {
+class supporterFail {
     constructor(thisRoom) {
         this.thisRoom = thisRoom;
         
-        this.phase = "fail";
+        this.phase = "supporterFail";
         this.showGuns = false;
        
     };
