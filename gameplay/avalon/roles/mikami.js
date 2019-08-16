@@ -14,6 +14,8 @@ class Mikami {
         
         this.playerShot = "";
         this.playerShot2 = "";
+        this.playerShot3 = "";
+        this.playerShot4 = "";
     }
     //Mikami sees Light but not Misa
     see () {
@@ -45,17 +47,8 @@ class Mikami {
         if (this.playerShot === "") {
             // If we have the right conditions, we go into assassination phase
             if (this.thisRoom.phase === "finished") {
-                //Get the number of successes:
-                var numOfSuccesses = 0;
-                
-                for (var i = 0; i < this.thisRoom.missionHistory.length; i++) {
-                    if (this.thisRoom.missionHistory[i] === "succeeded") {
-                        numOfSuccesses++;
-                    }
-         
-                }
-                
-                if (numOfSuccesses === 4 ) {
+                //Check that all 4 missions have happened:
+                if (this.thisRoom.missionHistory.length === 4 ) {
                     // Set the assassination phase
                     this.thisRoom.startAssassinationTime = new Date();
                     this.thisRoom.phase = this.specialPhase;
@@ -72,6 +65,7 @@ class Mikami {
             return {
                 assassinShotUsername: this.playerShot,
                 assassinShotUsername2: this.playerShot2
+                
             };
         }
         else {
