@@ -47,27 +47,19 @@ function Game(host_, roomId_, io_, maxNumPlayers_, newRoomPassword_, gameMode_) 
 	//********************************
 	//CONSTANTS
 	//********************************
-	this.minPlayers = 5;
+	this.minPlayers = 7;
 	this.alliances = [
-		"Resistance",
-		"Resistance",
-		"Resistance",
-		"Spy",
-		"Spy",
-		"Resistance",
-		"Spy",
-		"Resistance",
-		"Resistance",
-		"Spy"
+		"Detective",
+		"Detective",
+		"Detective",
+		"Kira",
+		"Kira",
+		"Detective",
+		"Kira"
 	];
 
 	this.numPlayersOnMission = [
-		["2", "3", "2", "3", "3"],
-		["2", "3", "4", "3", "4"],
-		["2", "3", "3", "4*", "4"],
-		["3", "4", "4", "5*", "5"],
-		["3", "4", "4", "5*", "5"],
-		["3", "4", "4", "5*", "5"],
+		["2", "3", "4", "5"],
 	];
 
 	//Get the Room properties
@@ -334,7 +326,7 @@ Game.prototype.playerLeaveRoom = function (socket) {
 
 //start game
 Game.prototype.startGame = function (options) {
-	if (this.socketsOfPlayers.length < 5 || this.socketsOfPlayers.length > 10 || this.gamePlayerLeftDuringReady === true) {
+	if (this.socketsOfPlayers.length < 7 || this.socketsOfPlayers.length > 7 || this.gamePlayerLeftDuringReady === true) {
 		this.canJoin = true;
 		this.gamePlayerLeftDuringReady = false;
 		return false;
@@ -400,10 +392,10 @@ Game.prototype.startGame = function (options) {
 		// If a role file exists for this
 		if (this.specialRoles.hasOwnProperty(op)) {
 			// If it is a res:
-			if (this.specialRoles[op].alliance === "Resistance") {
+			if (this.specialRoles[op].alliance === "Detective") {
 				this.resRoles.push(this.specialRoles[op].role);
 			}
-			else if (this.specialRoles[op].alliance === "Spy") {
+			else if (this.specialRoles[op].alliance === "Kira") {
 				this.spyRoles.push(this.specialRoles[op].role);
 			}
 			else {
@@ -426,11 +418,11 @@ Game.prototype.startGame = function (options) {
 	var spyPlayers = [];
 
 	for (var i = 0; i < this.playersInGame.length; i++) {
-		if (this.playersInGame[i].alliance === "Resistance") {
+		if (this.playersInGame[i].alliance === "Detective") {
 			resPlayers.push(i);
 			this.resistanceUsernames.push(this.playersInGame[i].username);
 		}
-		else if (this.playersInGame[i].alliance === "Spy") {
+		else if (this.playersInGame[i].alliance === "Kira") {
 			spyPlayers.push(i);
 			this.spyUsernames.push(this.playersInGame[i].username);
 
@@ -1076,11 +1068,11 @@ Game.prototype.finishGame = function (toBeWinner) {
 	this.finished = true;
 	this.winner = toBeWinner;
 
-	if (this.winner === "Spy") {
-		this.sendText(this.allSockets, "The spies win!", "gameplay-text-red");
+	if (this.winner === "Kira") {
+		this.sendText(this.allSockets, "Kira wins!", "gameplay-text-red");
 	}
-	else if (this.winner === "Resistance") {
-		this.sendText(this.allSockets, "The resistance wins!", "gameplay-text-blue");
+	else if (this.winner === "Detective") {
+		this.sendText(this.allSockets, "The detectives win!", "gameplay-text-blue");
 	}
 
 	// Post results of Merlin guesses
