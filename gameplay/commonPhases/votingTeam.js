@@ -39,13 +39,18 @@ VotingTeam.prototype.gameMove = function (socket, buttonPressed, selectedPlayers
 
             var outcome = calcVotes(this.thisRoom.votes);
 
-            if (outcome === "yes") {
-                this.thisRoom.phase = "votingMission";
-                this.thisRoom.playersYetToVote = this.thisRoom.proposedTeam.slice();
+            if (outcome === "yes" && this.thisRoom.missionNum === 4) {
+                this.thisRoom.phase = "finished";
 
-                var str = "Mission " + this.thisRoom.missionNum + "." + this.thisRoom.pickNum + " was approved." + getStrApprovedRejectedPlayers(this.thisRoom.votes, this.thisRoom.playersInGame);
+                var str = "Showdown 4." + this.thisRoom.pickNum + " was approved." + getStrApprovedRejectedPlayers(this.thisRoom.votes, this.thisRoom.playersInGame);
                 this.thisRoom.sendText(this.thisRoom.allSockets, str, "gameplay-text");
             }
+            else if (outcome === "yes") {
+                this.thisRoom.phase = "votingMission";
+                this.thisRoom.playersYetToVote = this.thisRoom.proposedTeam.slice();
+                
+                var str = "Mission " + this.thisRoom.missionNum + "." + this.thisRoom.pickNum + " was approved." + getStrApprovedRejectedPlayers(this.thisRoom.votes, this.thisRoom.playersInGame);
+                this.thisRoom.sendText(this.thisRoom.allSockets, str, "gameplay-text");
             //Hammer reject
             else if (outcome === "no" && this.thisRoom.pickNum >= 5) {
                 this.thisRoom.missionHistory[this.thisRoom.missionHistory.length] = "failed";
@@ -53,7 +58,7 @@ VotingTeam.prototype.gameMove = function (socket, buttonPressed, selectedPlayers
                 this.thisRoom.howWasWon = "Hammer rejected.";
                 this.thisRoom.sendText(this.thisRoom.allSockets, "The hammer was rejected.", "gameplay-text-red");
 
-                this.thisRoom.finishGame("Spy");
+                this.thisRoom.finishGame("Kira");
             }
             else if (outcome === "no") {
                 this.thisRoom.proposedTeam = [];
