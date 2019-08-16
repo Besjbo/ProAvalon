@@ -48,7 +48,6 @@ VotingMission.prototype.gameMove = function (socket, buttonPressed, selectedPlay
         else {
             console.log("ERROR! Outcome was: " + outcome);
         }
-        var numofKiraFail = KiraFail(this.thisRoom.missionVotes);
     }
         var numOfVotedFails = countFails(this.thisRoom.missionVotes);
         this.thisRoom.numFailsHistory.push(numOfVotedFails);
@@ -56,22 +55,25 @@ VotingMission.prototype.gameMove = function (socket, buttonPressed, selectedPlay
         //for the gameplay message
         if (outcome === "succeeded") {
             if (numOfVotedFails === 0) {
-                this.thisRoom.sendText(this.thisRoom.allSockets, "Mission " + this.thisRoom.missionNum + " succeeded.", "gameplay-text-blue");
+                this.thisRoom.sendText(this.thisRoom.allSockets, "Investigation " + this.thisRoom.missionNum + " succeeded.", "gameplay-text-blue");
             }
             else {
-                this.thisRoom.sendText(this.thisRoom.allSockets, "Mission " + this.thisRoom.missionNum + " succeeded, but with " + numOfVotedFails + " fail.", "gameplay-text-blue");
+                this.thisRoom.sendText(this.thisRoom.allSockets, "Investigation " + this.thisRoom.missionNum + " succeeded, but with " + numOfVotedFails + " fail.", "gameplay-text-blue");
             }
         }
         else if (outcome === "failed") {
             if (numOfVotedFails === 1) {
-                this.thisRoom.sendText(this.thisRoom.allSockets, "Mission " + this.thisRoom.missionNum + " failed with " + numOfVotedFails + " fail.", "gameplay-text-red");
+                this.thisRoom.sendText(this.thisRoom.allSockets, "Investigation " + this.thisRoom.missionNum + " failed with " + numOfVotedFails + " fail.", "gameplay-text-red");
             }
             else {
-                this.thisRoom.sendText(this.thisRoom.allSockets, "Mission " + this.thisRoom.missionNum + " failed with " + numOfVotedFails + " fails.", "gameplay-text-red");
+                this.thisRoom.sendText(this.thisRoom.allSockets, "Investigation " + this.thisRoom.missionNum + " failed with " + numOfVotedFails + " fails.", "gameplay-text-red");
             }
         }
-
-
+    //for the Kira Fail message
+     var numofKiraFail = KiraFail(this.thisRoom.missionVotes);
+    if (numofKiraFail === 1) {
+                this.thisRoom.sendText("Kira has failed the investigation!", "gameplay-text-red");
+            }
         //if we get all the votes in, then do this.thisRoom
         this.thisRoom.lastProposedTeam = this.thisRoom.proposedTeam;
         this.thisRoom.proposedTeam = [];
@@ -104,6 +106,17 @@ VotingMission.prototype.gameMove = function (socket, buttonPressed, selectedPlay
             this.thisRoom.phase = "pickingTeam";
         }
         //If the investigation repeats
+        else if (numofKiraFail === 1) {
+       this.thisRoom.pickNum = 1;
+            
+            this.thisRoom.teamLeader--;
+            if (this.thisRoom.teamLeader < 0) {
+                this.thisRoom.teamLeader = this.thisRoom.playersInGame.length - 1;
+            }
+
+            this.thisRoom.hammer = ((this.thisRoom.teamLeader - 5 + 1 + this.thisRoom.playersInGame.length) % this.thisRoom.playersInGame.length);
+            this.thisRoom.phase = "kiraFail";
+        }     
         else {
             this.thisRoom.pickNum = 1;
             
@@ -113,7 +126,7 @@ VotingMission.prototype.gameMove = function (socket, buttonPressed, selectedPlay
             }
 
             this.thisRoom.hammer = ((this.thisRoom.teamLeader - 5 + 1 + this.thisRoom.playersInGame.length) % this.thisRoom.playersInGame.length);
-            this.thisRoom.phase = "pickingTeam";
+            this.thisRoom.phase = "Fail";
         }
     }
 };
