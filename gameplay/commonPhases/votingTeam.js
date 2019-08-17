@@ -83,6 +83,7 @@ VotingTeam.prototype.gameMove = function (socket, buttonPressed, selectedPlayers
             }
             else if (outcome === "no") {
                 this.thisRoom.proposedTeam = [];
+                this.thisRoom.proposedTarget = [];
                 this.thisRoom.phase = "pickingTeam";
 
                 var str = "Mission " + this.thisRoom.missionNum + "." + this.thisRoom.pickNum + " was rejected." + getStrApprovedRejectedPlayers(this.thisRoom.votes, this.thisRoom.playersInGame);
