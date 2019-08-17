@@ -14,8 +14,9 @@ class supporterFail {
     constructor(thisRoom) {
         this.thisRoom = thisRoom;
         
-        this.phase = "supporterFail";
-        this.showGuns = false;
+         this.role = "Misa";
+        this.phase = "misaFail";
+        this.showGuns = true;
        
     };
     
@@ -52,38 +53,22 @@ class supporterFail {
             socket.emit("danger-alert", "Error: User does not exist. Tell the admin if you see this.");
             return;
         }
-        
-        var indexOfCardHolder = this.thisRoom.specialCards[this.card.toLowerCase()].indexOfPlayerHolding;
-        var ladyHistory = this.thisRoom.specialCards[this.card.toLowerCase()].ladyHistory;
-        var targetIndex = usernamesIndexes.getIndexFromUsername(this.thisRoom.playersInGame, selectedPlayers);
-        
-        //Get index of socket 
-        var indexOfSocket = undefined;
-        for (var i = 0; i < this.thisRoom.playersInGame.length; i++) {
-            // console.log("Comparing: " + this.thisRoom.playersInGame[i].username + " with " + socket.request.user.username);
-            if (this.thisRoom.playersInGame[i].username === socket.request.user.username) {
-                indexOfSocket = i;
-                break;
-            }
-        }
-        
-        // console.log("Index of socket: ");
-        // console.log(indexOfSocket);
-        
-        // If the requester is the lady holder, do the lady stuff
-        if (indexOfCardHolder === indexOfSocket) {
+       //Check that the person making this request is Misa 
+       var indexOfRequester = usernamesIndexes.getIndexFromUsername(this.thisRoom.playersInGame, socket.request.user.username);
+                if (this.thisRoom.playersInGame[indexOfRequester].role === this.role);
+  {
             // Check if we can card that person
-            if (ladyHistory.includes(selectedPlayers) === true) {
-                socket.emit("danger-alert", "You cannot card that person.");
+            if (this.thisRoom.lastProposedTeam.includes(selectedPlayers) !== true) {
+                socket.emit("danger-alert", "You cannot investigate that person!");
                 return;
             }
             
-            //grab the target's alliance
+            //grab the target's role
             var role = this.thisRoom.playersInGame[targetIndex].role;
             
-            //emit to the lady holder the person's alliance
-            socket.emit("fail-info", /*"Player " + */targetUsername + " is " + role + ".");
-            // console.log("Player " + target + " is a " + alliance);
+            //emit to Misa the person's person
+            socket.emit("misaFail-info", /*"Player " + */targetUsername + " is " + role + ".");
+            // console.log("Player " + target + " is a " + role);
             
             
             // this.gameplayMessage = (socket.request.user.username + " has carded " + target);
@@ -93,9 +78,9 @@ class supporterFail {
             //update phase
             this.thisRoom.phase = "pickingTeam";
         }
-        // The requester is not the lady holder. Ignore the request.
+        // The requester is not Misa. Ignore the request.
         else {
-            socket.emit("danger-alert", "You did not fail the investigation.");
+            socket.emit("danger-alert", "You are not the player currently investigating.");
             
             return;
         }
@@ -103,15 +88,14 @@ class supporterFail {
     };
     
     buttonSettings (indexOfPlayer) {
-        //Get the index of the lady
-        var indexOfCardHolder = this.thisRoom.specialCards[this.card.toLowerCase()].indexOfPlayerHolding;
+     
         
         var obj = {
             green: {},
             red: {}
         };
         
-        if (indexOfPlayer === indexOfCardHolder) {
+        if (this.thisRoom.playersInGame[indexOfRequester].role === this.role) {
             obj.green.hidden = false;
             obj.green.disabled = true;
             obj.green.setText = "Card";
@@ -134,11 +118,11 @@ class supporterFail {
     }
     
     numOfTargets (indexOfPlayer) {
-        var indexOfCardHolder = this.thisRoom.specialCards[this.card.toLowerCase()].indexOfPlayerHolding;
+ 
         
-        if (indexOfPlayer !== undefined && indexOfPlayer !== null) {
+        if (indexOfRequester !== undefined && indexOfRequester !== null) {
             // If indexOfPlayer is the lady holder, one player to select 
-            if (indexOfPlayer === indexOfCardHolder) {
+            if (this.thisRoom.playersInGame[indexOfRequester].role === this.role) {
                 return 1;
             }
             else {
@@ -149,9 +133,9 @@ class supporterFail {
     
     
     getStatusMessage (indexOfPlayer) {
-        var indexOfCardHolder = this.thisRoom.specialCards[this.card.toLowerCase()].indexOfPlayerHolding;
+        var indexOfRequester = usernamesIndexes.getIndexFromUsername(this.thisRoom.playersInGame, socket.request.user.username);
         
-        if (indexOfPlayer === indexOfCardHolder) {
+        if (this.thisRoom.playersInGame[indexOfRequester].role === this.role) {
             return "Choose a player to investigate.";
         }
         // If it is any other player who isn't special role
