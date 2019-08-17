@@ -40,11 +40,11 @@ Finished.prototype.numOfTargets = function (indexOfPlayer) {
 Finished.prototype.getStatusMessage = function (indexOfPlayer) {
 
     var winner = "Error, undefined";
-    if (this.thisRoom.winner === "Resistance") {
-        winner = "resistance";
+    if (this.thisRoom.winner === "Detective") {
+        winner = "detectives";
     }
-    else if (this.thisRoom.winner === "Spy") {
-        winner = "spies";
+    else if (this.thisRoom.winner === "Kira") {
+        winner = "Kira";
     }
 
     var str = "Game has finished. The " + winner + " have won.";
