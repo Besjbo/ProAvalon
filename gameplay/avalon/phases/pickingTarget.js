@@ -9,32 +9,45 @@ function PickingTarget(thisRoom_) {
 
 
 PickingTarget.prototype.gameMove = function (socket, buttonPressed, selectedPlayers) {
-    if (buttonPressed !== "yes") {
-        // this.thisRoom.sendText(this.thisRoom.allSockets, `Button pressed was ${buttonPressed}. Let admin know if you see this.`, "gameplay-text");
-        return;
-    }
+        if (buttonPressed !== "yes") {
+            // this.thisRoom.sendText(this.thisRoom.allSockets, `Button pressed was ${buttonPressed}. Let admin know if you see this.`, "gameplay-text");
+            return;
+        }
 
-    var numOfTargets = this.thisRoom.getClientNumOfTargets(this.thisRoom.teamLeader);
-    if (numOfTargets !== selectedPlayers.length && numOfTargets !== null) {
-        this.thisRoom.sendText(this.thisRoom.allSockets, `Wrong number of targets inputted. You have given ${selectedPlayers.length} targets. Expected ${numOfTargets}.`, "server-text");
-        return;
-    }
-
+        if (socket === undefined || selectedPlayers === undefined) {
+            return;
+        }
+        
+        // console.log("typeof Data: ");
+        // console.log(typeof(data));
+        
+        if (typeof (selectedPlayers) === "object" || typeof (selectedPlayers) === "array") {
+            selectedPlayers = selectedPlayers[0];
+        }
+        
+        // console.log("Data: ");
+        // console.log(data);
+        
+        //Check that the target's username exists
+        var targetUsername = selectedPlayers;
+        var found = false;
+        for (var i = 0; i < this.thisRoom.playersInGame.length; i++) {
+            if (this.thisRoom.playersInGame[i].username === targetUsername) {
+                found = true;
+                break;
+            }
+        }
+        if (found === false) {
+            socket.emit("danger-alert", "Error: User does not exist. Tell the admin if you see this.");
+            return;
+        }
     // If the person requesting is the host
     if (usernamesIndexes.getIndexFromUsername(this.thisRoom.playersInGame, socket.request.user.username) === this.thisRoom.teamLeader) {
-        //Reset votes
-        this.thisRoom.votes = [];
-        this.thisRoom.publicVotes = [];
 
-        var num = this.thisRoom.numPlayersOnMission[this.thisRoom.playersInGame.length - this.thisRoom.minPlayers][this.thisRoom.missionNum - 1];
-        // console.log("Num player for this.thisRoom mission : " + num);
 
-        //In case the mission num is 4*, make it 4.
-        if (num.length > 1) { num = parseInt(num[0]); }
-        else { num = parseInt(num); }
 
         //Check that the data is valid (i.e. includes only usernames of players)
-        for (var i = 0; i < num; i++) {
+        for (var i = 0; i < 2; i++) {
             // If the data doesn't have the right number of users
             // Or has an empty element
             if (!selectedPlayers[i]) {
@@ -46,23 +59,16 @@ PickingTarget.prototype.gameMove = function (socket, buttonPressed, selectedPlay
         }
 
         //Continue if it passes the above check
-        this.thisRoom.proposedTeam = selectedPlayers;
+        this.thisRoom.proposedTarget = selectedPlayers;
         //.slice to clone the array
         this.thisRoom.playersYetToVote = this.thisRoom.playerUsernamesInGame.slice();
 
         //--------------------------------------
         //Send out the gameplay text
         //--------------------------------------
-        var str = "";
-        for (var i = 0; i < selectedPlayers.length; i++) {
-            str += selectedPlayers[i] + ", ";
-        }
+       
 
-        var str2 = socket.request.user.username + " has picked: " + str;
-
-        //remove the last , and replace with .
-        str2 = str2.slice(0, str2.length - 2);
-        str2 += ".";
+        var str2 = socket.request.user.username + " has proposed an investigation of: " + targetUsername + ".";
 
         this.thisRoom.sendText(this.thisRoom.allSockets, str2, "gameplay-text");
 
@@ -81,7 +87,7 @@ PickingTarget.prototype.gameMove = function (socket, buttonPressed, selectedPlay
 //  hidden          - Is the button hidden?
 //  disabled        - Is the button disabled?
 //  setText         - What text to display in the button
-PickingTeam.prototype.buttonSettings = function (indexOfPlayer) {
+PickingTarget.prototype.buttonSettings = function (indexOfPlayer) {
 
     var obj = {
         green: {},
@@ -114,8 +120,6 @@ PickingTeam.prototype.buttonSettings = function (indexOfPlayer) {
 
 
 PickingTarget.prototype.numOfTargets = function (indexOfPlayer) {
-    var num = this.thisRoom.numPlayersOnMission[this.thisRoom.playersInGame.length - this.thisRoom.minPlayers][this.thisRoom.missionNum - 1];
-    // console.log("Num player for this.thisRoom mission : " + num);
 
     //If we are not the team leader
     if (indexOfPlayer !== this.thisRoom.teamLeader) {
@@ -134,12 +138,12 @@ PickingTeam.prototype.getStatusMessage = function (indexOfPlayer) {
     if (indexOfPlayer !== undefined && indexOfPlayer === this.thisRoom.teamLeader) {
         var num = this.thisRoom.numPlayersOnMission[this.thisRoom.playersInGame.length - this.thisRoom.minPlayers][this.thisRoom.missionNum - 1];
 
-        return "Your turn to pick a team. Pick " + num + " players.";
+        return "Pick a target to investigate.";
     }
     else {
         // console.log(this.thisRoom.teamLeader);
         if (this.thisRoom.playersInGame[this.thisRoom.teamLeader]) {
-            return "Waiting for " + this.thisRoom.playersInGame[this.thisRoom.teamLeader].username + " to pick a team.";
+            return "Waiting for " + this.thisRoom.playersInGame[this.thisRoom.teamLeader].username + " to pick an investigation target.";
         }
         else {
             return "ERROR: Tell the admin if you see this, code 10.";
@@ -149,4 +153,4 @@ PickingTeam.prototype.getStatusMessage = function (indexOfPlayer) {
 
 
 
-module.exports = PickingTeam;
+module.exports = PickingTarget;
