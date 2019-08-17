@@ -145,15 +145,10 @@ class supporterFail {
         }
     }
     
-    getProhibitedIndexesToPick (indexOfPlayer) {
-        var ladyHistory = this.thisRoom.specialCards[this.card.toLowerCase()].ladyHistory;
-        
-        return ladyHistory;
-    }
     
 }
 
 
 
-module.exports = Lady;
+module.exports = misaFail;
 
