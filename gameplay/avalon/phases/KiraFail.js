@@ -16,9 +16,7 @@ class KiraFail {
         this.role = "Light Yagami";
         
         this.phase = "KiraFail";
-        this.showGuns = false;
-        
-        this.finishedShot = false;
+        this.showGuns = true;
         
     };
     
@@ -28,7 +26,7 @@ class KiraFail {
             return;
         }
 
-        if (this.finishedShot === false) {
+        if (this.finishedKiraShot === false) {
             // Carry out the assassination move
             if (socket && selectedPlayers) {
                 
@@ -36,14 +34,24 @@ class KiraFail {
                 var indexOfRequester = usernamesIndexes.getIndexFromUsername(this.thisRoom.playersInGame, socket.request.user.username);
                 if (this.thisRoom.playersInGame[indexOfRequester].role === this.role) {
                     
-                    // Just shoot Merlin
+                    // Shoot L
                     if (selectedPlayers.length === 1) {
                         if (typeof (selectedPlayers) === "object" || typeof (selectedPlayers) === "array") {
                             selectedPlayers = selectedPlayers[0];
-                        }
-                        
+                        }  
+                      
                         var indexOfTarget = usernamesIndexes.getIndexFromUsername(this.thisRoom.playersInGame, selectedPlayers);              
-                        
+                        //Check that the target is on the investigation  
+                        if (this.thisRoom.lastProposedTeam.includes(selectedPlayers) !== true) {
+                socket.emit("danger-alert", "You must assassinate someone on  the investigation!");
+                return;
+            }
+                        //Kira is not allowed to assassinate a supporter
+                         if (this.thisRoom.playersInGame[indexOfTarget].alliance === "Kira") {
+                            socket.emit("danger-alert", "Do not assassinate your teammate!");
+                            return;
+                        }
+                    
                         // Get L's username
                         var LUsername = undefined;
                         for (var i = 0; i < this.thisRoom.playersInGame.length; i++) {
@@ -52,87 +60,30 @@ class KiraFail {
                             }
                         }
                         
-                        //set the player shot in the assassin role object
+                        //if Kira shoots L, end the game, otherwise go to picking team
                         this.thisRoom.specialRoles["Light Yagami"].playerShot = selectedPlayers;
                         
                         if (indexOfTarget !== -1) {
                             if (this.thisRoom.playersInGame[indexOfTarget].role === "L") {
                                 this.thisRoom.winner = "Kira";
-                                this.thisRoom.howWasWon = "Light assassinated L correctly.";
+                                this.thisRoom.howWasWon = "Light assassinated L.";
                                 
                                 this.thisRoom.sendText(this.thisRoom.allSockets, "Kira has assassinated " + LUsername + "! They were correct!", "gameplay-text-red");
+                                
+                                this.thisRoom.finishGame(this.thisRoom.winner);
                             }
                             else {
-                                this.thisRoom.winner = "Resistance";
-                                this.thisRoom.howWasWon = "Mission successes and assassin shot wrong.";
-                                
                                 // console.log("THIS WAS RUN ONCE");
                                 this.thisRoom.sendText(this.thisRoom.allSockets, "Kira has attempted to assassinate " + selectedPlayers + ". " + selectedPlayers + " was not L.", "gameplay-text-blue");
-                            }
-                            
-                            this.finishedShot = true;
-                            
-                           
-                            
-                            this.thisRoom.finishGame(this.thisRoom.winner);
+                                this.thisRoom.phase = "pickingTeam";
+                            }    
+          
                         }
                         else {
                             console.log(selectedPlayers);
                             socket.emit("danger-alert", "Bad assassination data. Tell the admin if you see this!");
                         }
                     }
-                    
-                
-                        
-                        //set the player shot in the assassin role object
-                        this.thisRoom.specialRoles["assassin"].playerShot = selectedPlayers[0];
-                        this.thisRoom.specialRoles["assassin"].playerShot2 = selectedPlayers[1];
-                        
-                        var correctComboShot = false;
-                        if (
-                            (
-                                this.thisRoom.playersInGame[i0].role === "Tristan" &&
-                                this.thisRoom.playersInGame[i1].role === "Isolde"
-                            )
-                            ||
-                            (
-                                this.thisRoom.playersInGame[i1].role === "Tristan" &&
-                                this.thisRoom.playersInGame[i0].role === "Isolde"
-                            )
-                        ) {
-                            this.thisRoom.winner = "Spy";
-                            this.thisRoom.howWasWon = "Assassinated Tristan and Isolde correctly.";
-                            
-                            this.thisRoom.sendText(this.thisRoom.allSockets, "The assassin has shot " + tristanUsername + " and " + isoldeUsername + "! They were correct!", "gameplay-text-red");
-                            
-                        }
-                        else {
-                            this.thisRoom.winner = "Resistance";
-                            this.thisRoom.howWasWon = "Mission successes and assassin shot wrong.";
-                            
-                            // console.log("THIS WAS RUN ONCE");
-                            this.thisRoom.sendText(this.thisRoom.allSockets, "The assassin has shot " + selectedPlayers[0] + " and " + selectedPlayers[1] + "! " + selectedPlayers[0] + " and " + selectedPlayers[1] + " were not Tristan and Isolde, " + tristanUsername + " and " + isoldeUsername + " were!", "gameplay-text-blue");
-                        }
-                        
-                        this.finishedShot = true;
-                        
-                        // console.log("playersInGame");
-                        //For gameRecord - get the role that was shot
-                        for (var i = 0; i < this.thisRoom.playersInGame.length; i++) {
-                            // console.log(this.thisRoom.playersInGame[i].username + " is " + this.thisRoom.playersInGame[i].role);
-                            // console.log("data0: " + data[0]);
-                            // console.log("data1: " + data[1]);
-                            
-                            if (this.thisRoom.playersInGame[i].username === selectedPlayers[0]) {
-                                this.thisRoom.whoAssassinShot = this.thisRoom.playersInGame[i].role;
-                            }
-                            
-                            if (this.thisRoom.playersInGame[i].username === selectedPlayers[1]) {
-                                this.thisRoom.whoAssassinShot2 = this.thisRoom.playersInGame[i].role;
-                            }
-                        }
-                        
-                        this.thisRoom.finishGame(this.thisRoom.winner);
                         
                     }
                 }
@@ -147,10 +98,10 @@ class KiraFail {
     //  setText         - What text to display in the button
     buttonSettings (indexOfPlayer) {
         //Get the index of the assassin
-        var indexOfAssassin = -1;
+        var indexOfKira = -1;
         for (var i = 0; i < this.thisRoom.playersInGame.length; i++) {
             if (this.thisRoom.playersInGame[i].role === this.role) {
-                indexOfAssassin = i;
+                indexOfKira = i;
                 break;
             }
         }
@@ -160,7 +111,7 @@ class KiraFail {
             red: {}
         };
         
-        if (indexOfPlayer === indexOfAssassin) {
+        if (indexOfPlayer === indexOfKira) {
             obj.green.hidden = false;
             obj.green.disabled = true;
             obj.green.setText = "Shoot";
@@ -184,38 +135,19 @@ class KiraFail {
     
     numOfTargets (indexOfPlayer) {
         if (indexOfPlayer !== undefined && indexOfPlayer !== null) {
-            // If assassin, one player to select (assassinate)
+            // If L, one player to select (assassinate)
             if (this.thisRoom.playersInGame[indexOfPlayer].role === this.role) {
                 
-                // Check if Merlin exists.
-                var merlinExists = false;
-                // Check if iso tristan are both in the game.
-                var tristExists = false;
-                var isoExists = false;
+                // Check if L exists.
+                var LExists = false;
                 
                 for (var i = 0; i < this.thisRoom.playersInGame.length; i++) {
-                    if (this.thisRoom.playersInGame[i].role === "Merlin") {
-                        merlinExists = true;
+                    if (this.thisRoom.playersInGame[i].role === "L") {
+                        LExists = true;
                     }
-                    
-                    if (this.thisRoom.playersInGame[i].role === "Tristan") {
-                        tristExists = true;
-                    }
-                    
-                    if (this.thisRoom.playersInGame[i].role === "Isolde") {
-                        isoExists = true;
-                    }
-                }
                 
-                if (tristExists === true && isoExists === true && merlinExists) {
-                    return [1, 2];
-                }
-                
-                else if (tristExists === true && isoExists === true) {
-                    return 2;
-                }
-                
-                else if (merlinExists === true) {
+          
+               if (LExists === true) {
                     return 1;
                 }
             }
@@ -227,21 +159,21 @@ class KiraFail {
     
     
     getStatusMessage (indexOfPlayer) {
-        //Get the index of the assassin
-        var indexOfAssassin = -1;
+        //Get the index of Kira
+        var indexOfKira = -1;
         for (var i = 0; i < this.thisRoom.playersInGame.length; i++) {
             if (this.thisRoom.playersInGame[i].role === this.role) {
-                indexOfAssassin = i;
+                indexOfKira = i;
             }
         }
         
-        if (indexOfPlayer === indexOfAssassin) {
-            return "Choose someone to assassinate."
+        if (indexOfPlayer === indexOfKira) {
+            return "Assassinate L."
         }
         // If it is any other player who isn't special role
         else {
             var usernameOfAssassin = this.thisRoom.playersInGame[indexOfAssassin].username;
-            return "Waiting for " + usernameOfAssassin + " to assassinate."
+            return "Waiting for Kira to assassinate."
         }
     }
     
@@ -249,7 +181,7 @@ class KiraFail {
         var spyIndexes = [];
         
         for (var i = 0; i < this.thisRoom.playersInGame.length; i++) {
-            if (this.thisRoom.playersInGame[i].alliance === "Spy" && this.thisRoom.playersInGame[i].role !== "Oberon") {
+            if (this.thisRoom.playersInGame[i].alliance === "Kira") {
                 spyIndexes.push(i);
             }
         }
