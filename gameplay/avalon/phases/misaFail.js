@@ -140,7 +140,6 @@ class supporterFail {
         }
         // If it is any other player who isn't special role
         else {
-            var usernameOfCardHolder = this.thisRoom.playersInGame[indexOfCardHolder].username;
             return "Waiting for the Kira supporter to investigate someone."
         }
     }
