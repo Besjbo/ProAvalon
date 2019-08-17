@@ -40,6 +40,7 @@ VotingTeam.prototype.gameMove = function (socket, buttonPressed, selectedPlayers
             var outcome = calcVotes(this.thisRoom.votes);
             var escaped = calcEscape(this.thisRoom.proposedTeam);
             
+           //if Light is not at the showdown, he wins
             if (outcome === "yes" && this.thisRoom.missionNum === 4 && escaped === "yes") {
                this.thisRoom.missionHistory[this.thisRoom.missionHistory.length] = "failed";
 
@@ -47,19 +48,30 @@ VotingTeam.prototype.gameMove = function (socket, buttonPressed, selectedPlayers
                 this.thisRoom.sendText(this.thisRoom.allSockets, "Kira has escaped.", "gameplay-text-red");
 
                 this.thisRoom.finishGame("Kira");
-                
+           //if Light is at the showdown, assassination begins    
            else if (outcome === "yes" && this.thisRoom.missionNum === 4) {
-                this.thisRoom.phase = "finished";
-
+          
                 var str = "Showdown 4." + this.thisRoom.pickNum + " was approved." + getStrApprovedRejectedPlayers(this.thisRoom.votes, this.thisRoom.playersInGame);
                 this.thisRoom.sendText(this.thisRoom.allSockets, str, "gameplay-text")
                
+                //roles off showdown are revealed 
+                  for (var i = 0; i < this.thisRoom.playersInGame.length; i++) {
+            if (this.thisRoom.lastProposedTeam.includes(this.thisRoom.playersInGame[i]) {}
+                
+              else { 
+                this.thisRoom.sendText(this.thisRoom.allSockets, this.thisRoom.playersInGame[i].user + "is" + this.thisRoom.playersInGame[i].username + ".", "gameplay-text-red");
+                  }
+           }
+                      //goto assassination
+               this.thisRoom.phase = "assassination";
             else if (outcome === "yes") {
                 this.thisRoom.phase = "votingMission";
                 this.thisRoom.playersYetToVote = this.thisRoom.proposedTeam.slice();
                 
                 var str = "Mission " + this.thisRoom.missionNum + "." + this.thisRoom.pickNum + " was approved." + getStrApprovedRejectedPlayers(this.thisRoom.votes, this.thisRoom.playersInGame);
                 this.thisRoom.sendText(this.thisRoom.allSockets, str, "gameplay-text");
+            }
+            }
             //Hammer reject
             else if (outcome === "no" && this.thisRoom.pickNum >= 5) {
                 this.thisRoom.missionHistory[this.thisRoom.missionHistory.length] = "failed";
