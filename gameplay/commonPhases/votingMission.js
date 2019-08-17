@@ -105,8 +105,12 @@ VotingMission.prototype.gameMove = function (socket, buttonPressed, selectedPlay
             this.thisRoom.hammer = ((this.thisRoom.teamLeader - 5 + 1 + this.thisRoom.playersInGame.length) % this.thisRoom.playersInGame.length);
             this.thisRoom.phase = "pickingTeam";
         }
-        //If the mission fails with 2 fails, resolve supporter fail first
-       else if (numOfVotedFails !== 1) {
+    //Otherwise go to proper phase depending on who failed
+    var numofMikamiFail = MikamiFail(this.thisRoom.missionVotes);
+    var numofMisaFail = MisaFail(this.thisRoom.missionVotes);
+    
+    //If the mission fails with 3 fails (ohhhhh baby, yeahhhh) 
+    else if (numOfVotedFails === 3) {
        this.thisRoom.pickNum = 1;
             
             this.thisRoom.teamLeader--;
@@ -115,7 +119,43 @@ VotingMission.prototype.gameMove = function (socket, buttonPressed, selectedPlay
             }
 
             this.thisRoom.hammer = ((this.thisRoom.teamLeader - 5 + 1 + this.thisRoom.playersInGame.length) % this.thisRoom.playersInGame.length);
-            this.thisRoom.phase = "supporterFail";
+            this.thisRoom.phase = "tripleFail";
+        }
+       //If the mission fails with Misa and Mikami  
+    else if (numofMikamiFail === 1 && numofMisaFail ===1) {
+       this.thisRoom.pickNum = 1;
+            
+            this.thisRoom.teamLeader--;
+            if (this.thisRoom.teamLeader < 0) {
+                this.thisRoom.teamLeader = this.thisRoom.playersInGame.length - 1;
+            }
+
+            this.thisRoom.hammer = ((this.thisRoom.teamLeader - 5 + 1 + this.thisRoom.playersInGame.length) % this.thisRoom.playersInGame.length);
+            this.thisRoom.phase = "misamikamiFail";
+        }  
+        //If the mission fails with Mikami and Light  
+    else if (numofMikamiFail === 1 && numofKiraFail ===1) {
+       this.thisRoom.pickNum = 1;
+            
+            this.thisRoom.teamLeader--;
+            if (this.thisRoom.teamLeader < 0) {
+                this.thisRoom.teamLeader = this.thisRoom.playersInGame.length - 1;
+            }
+
+            this.thisRoom.hammer = ((this.thisRoom.teamLeader - 5 + 1 + this.thisRoom.playersInGame.length) % this.thisRoom.playersInGame.length);
+            this.thisRoom.phase = "mikamikiraFail";
+        }  
+        //If the mission fails with Misa and Light  
+    else if (numofKiraFail === 1 && numofMisaFail ===1) {
+       this.thisRoom.pickNum = 1;
+            
+            this.thisRoom.teamLeader--;
+            if (this.thisRoom.teamLeader < 0) {
+                this.thisRoom.teamLeader = this.thisRoom.playersInGame.length - 1;
+            }
+
+            this.thisRoom.hammer = ((this.thisRoom.teamLeader - 5 + 1 + this.thisRoom.playersInGame.length) % this.thisRoom.playersInGame.length);
+            this.thisRoom.phase = "misakiraFail";
         }  
     //If only Light fails, resolve his fail ability
         else if (numofKiraFail === 1) {
@@ -129,7 +169,19 @@ VotingMission.prototype.gameMove = function (socket, buttonPressed, selectedPlay
             this.thisRoom.hammer = ((this.thisRoom.teamLeader - 5 + 1 + this.thisRoom.playersInGame.length) % this.thisRoom.playersInGame.length);
             this.thisRoom.phase = "kiraFail";
         } 
-    //If only a supporter fails, resolve the supporter's ability
+    //If only Mikami fails, resolve his fail ability 
+    else if (numofMikamiFail === 1) {
+       this.thisRoom.pickNum = 1;
+            
+            this.thisRoom.teamLeader--;
+            if (this.thisRoom.teamLeader < 0) {
+                this.thisRoom.teamLeader = this.thisRoom.playersInGame.length - 1;
+            }
+
+            this.thisRoom.hammer = ((this.thisRoom.teamLeader - 5 + 1 + this.thisRoom.playersInGame.length) % this.thisRoom.playersInGame.length);
+            this.thisRoom.phase = "mikamiFail";
+        }  
+    //If only Misa fails, resolve her fail ability
         else {
             this.thisRoom.pickNum = 1;
             
@@ -139,7 +191,7 @@ VotingMission.prototype.gameMove = function (socket, buttonPressed, selectedPlay
             }
 
             this.thisRoom.hammer = ((this.thisRoom.teamLeader - 5 + 1 + this.thisRoom.playersInGame.length) % this.thisRoom.playersInGame.length);
-            this.thisRoom.phase = "supporterFail";
+            this.thisRoom.phase = "misaFail";
         }
     }
 };
@@ -250,6 +302,25 @@ for (var i = 0; i < votes.length; i++) {
     return numofKiraFail;
 }
 
+function MikamiFail(votes) {
+   var numofMikamiFail = 0; 
+for (var i = 0; i < votes.length; i++) {
+            if (votes[i] === "fail" && this.thisRoom.playersInGame[i].role === "Mikami") {
+            numofMikamiFail++;      
+            }
+        }
+    return numofMikamiFail;
+}
+
+function MisaFail(votes) {
+   var numofMisaFail = 0; 
+for (var i = 0; i < votes.length; i++) {
+            if (votes[i] === "fail" && this.thisRoom.playersInGame[i].role === "Misa") {
+            numofMisaFail++;      
+            }
+        }
+    return numofMisaFail;
+}
 
 
 
