@@ -105,7 +105,19 @@ VotingMission.prototype.gameMove = function (socket, buttonPressed, selectedPlay
             this.thisRoom.hammer = ((this.thisRoom.teamLeader - 5 + 1 + this.thisRoom.playersInGame.length) % this.thisRoom.playersInGame.length);
             this.thisRoom.phase = "pickingTeam";
         }
-        //If the investigation repeats
+        //If the mission fails with 2 fails, resolve supporter fail first
+       else if (numOfVotedFails !== 1) {
+       this.thisRoom.pickNum = 1;
+            
+            this.thisRoom.teamLeader--;
+            if (this.thisRoom.teamLeader < 0) {
+                this.thisRoom.teamLeader = this.thisRoom.playersInGame.length - 1;
+            }
+
+            this.thisRoom.hammer = ((this.thisRoom.teamLeader - 5 + 1 + this.thisRoom.playersInGame.length) % this.thisRoom.playersInGame.length);
+            this.thisRoom.phase = "supporterFail";
+        }  
+    //If only Light fails, resolve his fail ability
         else if (numofKiraFail === 1) {
        this.thisRoom.pickNum = 1;
             
@@ -116,7 +128,8 @@ VotingMission.prototype.gameMove = function (socket, buttonPressed, selectedPlay
 
             this.thisRoom.hammer = ((this.thisRoom.teamLeader - 5 + 1 + this.thisRoom.playersInGame.length) % this.thisRoom.playersInGame.length);
             this.thisRoom.phase = "kiraFail";
-        }     
+        } 
+    //If only a supporter fails, resolve the supporter's ability
         else {
             this.thisRoom.pickNum = 1;
             
