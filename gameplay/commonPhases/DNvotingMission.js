@@ -1,9 +1,9 @@
 var usernamesIndexes = require("../../myFunctions/usernamesIndexes");
 
-function VotingMission(thisRoom_) {
+function DNVotingMission(thisRoom_) {
     this.thisRoom = thisRoom_;
 
-    this.phase = "votingMission";
+    this.phase = "DNvotingMission";
     this.showGuns = true;
 };
 
@@ -324,4 +324,4 @@ for (var i = 0; i < votes.length; i++) {
 
 
 
-module.exports = VotingMission;
+module.exports = DNVotingMission;
