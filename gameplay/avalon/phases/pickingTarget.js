@@ -121,17 +121,14 @@ PickingTarget.prototype.buttonSettings = function (indexOfPlayer) {
 
 PickingTarget.prototype.numOfTargets = function (indexOfPlayer) {
 
-    //If we are not the team leader
-    if (indexOfPlayer !== this.thisRoom.teamLeader) {
-        return null;
-    }
-
-    //In case the mission num is 4*, make it 4.
-    if (num.length > 1) { num = parseInt(num[0]); }
-    else { num = parseInt(num); }
-
-    return num;
-}
+    if (indexOfPlayer!== undefined && indexOfPlayer === this.thisRoom.teamLeader) {
+            // If indexOfPlayer is the Leader, one player to select 
+                return 1;
+            }
+            else {
+                return null;
+            }
+        }
 
 
 PickingTeam.prototype.getStatusMessage = function (indexOfPlayer) {
