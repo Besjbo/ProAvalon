@@ -64,7 +64,7 @@ class LAssassination {
                         }
                      
                         //set the player shot in the assassin role object
-                        this.thisRoom.specialRoles["Mikami"].playerShot = selectedPlayers;
+                        this.thisRoom.specialRoles["Mikami"].playerShot3 = selectedPlayers;
                         
                         if (indexOfTarget !== -1) {
                             if (this.thisRoom.playersInGame[indexOfTarget].role !== "L") {
