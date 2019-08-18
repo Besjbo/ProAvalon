@@ -4,6 +4,9 @@ function DNVotingMission(thisRoom_) {
     this.thisRoom = thisRoom_;
 
     this.phase = "DNvotingMission";
+    
+    //Set default role to L for successful mission outcomes
+    this.role = "L";
     this.showGuns = true;
 };
 
@@ -100,6 +103,22 @@ VotingMission.prototype.gameMove = function (socket, buttonPressed, selectedPlay
             this.thisRoom.teamLeader--;
             if (this.thisRoom.teamLeader < 0) {
                 this.thisRoom.teamLeader = this.thisRoom.playersInGame.length - 1;
+            //grab investigation target's role
+                
+                var targetUsername = this.thisroom.proposedTarget;  
+           
+                var role = undefined;
+                for (var i = 0; i < this.thisRoom.playersInGame.length; i++) {
+            if (this.thisRoom.playersInGame[i].username === targetUsername) {
+                role = this.thisRoom.playersInGame[i].role
+            }
+                }
+           //Show L result of investigation
+                 for (var i = 0; i < this.thisRoom.playersInGame.length; i++) {
+            if (this.thisRoom.playersInGame[i].role === this.role) {
+             socket.emit("DNvotingMission-info", targetUsername + " is " + role + ".");
+            }
+            }
             }
 
             this.thisRoom.hammer = ((this.thisRoom.teamLeader - 5 + 1 + this.thisRoom.playersInGame.length) % this.thisRoom.playersInGame.length);
