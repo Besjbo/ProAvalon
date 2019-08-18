@@ -4,7 +4,10 @@ class Mikami {
     constructor(thisRoom) {
         this.thisRoom = thisRoom;
         
-        this.specialPhase = "assassination";
+        this.specialPhase = "NaomiAssassination";
+       this.specialPhase = "WatariAssassination";
+        this.specialPhase = "LAssassination";
+        this.specialPhase = "MatsudaAssassination";
         
         this.role = "Mikami";
         this.alliance = "Kira";
