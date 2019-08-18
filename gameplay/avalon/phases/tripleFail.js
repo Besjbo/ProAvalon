@@ -10,7 +10,7 @@
 
 var usernamesIndexes = require("../../../myFunctions/usernamesIndexes");
 
-class supporterFail {
+class tripleFail {
     constructor(thisRoom) {
         this.thisRoom = thisRoom;
         
