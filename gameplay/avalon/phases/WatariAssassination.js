@@ -75,7 +75,7 @@ class LAssassination {
                                 //For gameRecord - get the role that was shot
                             for (var i = 0; i < this.thisRoom.playersInGame.length; i++) {
                                 if (this.thisRoom.playersInGame[i].username === selectedPlayers) {
-                                    this.thisRoom.whoAssassinShot = this.thisRoom.playersInGame[i].role;
+                                    this.thisRoom.whoAssassinShot2 = this.thisRoom.playersInGame[i].role;
                                     break;
                                 }
                             }
