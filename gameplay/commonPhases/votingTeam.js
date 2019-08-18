@@ -63,7 +63,7 @@ VotingTeam.prototype.gameMove = function (socket, buttonPressed, selectedPlayers
                   }
            }
                       //goto assassination
-               this.thisRoom.phase = "assassination";
+               this.thisRoom.phase = "NaomiAssassination";
             else if (outcome === "yes") {
                 this.thisRoom.phase = "votingMission";
                 this.thisRoom.playersYetToVote = this.thisRoom.proposedTeam.slice();
