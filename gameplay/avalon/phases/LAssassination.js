@@ -1,4 +1,7 @@
-/* Each phase must have:
+/* Each 
+
+
+must have:
 - Name
 - Whether to show guns or not
 - GameMove to perform operations
@@ -8,14 +11,14 @@
 */
 var usernamesIndexes = require("../../../myFunctions/usernamesIndexes");
 
-class Assassination {
+class LAssassination {
     constructor(thisRoom) {
         this.thisRoom = thisRoom;
         
         // The role that is the owner of this phase
         this.role = "Mikami";
         
-        this.phase = "assassination";
+        this.phase = "LAssassination";
         this.showGuns = true;
         
         this.finishedShot = false;
@@ -36,7 +39,7 @@ class Assassination {
                 var indexOfRequester = usernamesIndexes.getIndexFromUsername(this.thisRoom.playersInGame, socket.request.user.username);
                 if (this.thisRoom.playersInGame[indexOfRequester].role === this.role) {
                     
-                    // Just shoot Merlin
+                    // Just shoot L
                     if (selectedPlayers.length === 1) {
                         if (typeof (selectedPlayers) === "object" || typeof (selectedPlayers) === "array") {
                             selectedPlayers = selectedPlayers[0];
@@ -87,23 +90,14 @@ class Assassination {
                         this.thisRoom.specialRoles["Mikami"].playerShot = selectedPlayers;
                         
                         if (indexOfTarget !== -1) {
-                            if (this.thisRoom.playersInGame[indexOfTarget].role === "Merlin") {
-                                this.thisRoom.winner = "Spy";
-                                this.thisRoom.howWasWon = "Assassinated Merlin correctly.";
+                            if (this.thisRoom.playersInGame[indexOfTarget].role !== "L") {
+                                this.thisRoom.winner = "Detectives";
+                                this.thisRoom.howWasWon = "L survived assassination.";
+                              
+                                this.thisRoom.sendText(this.thisRoom.allSockets, "Mikami tried to assassinate " + selectedPlayers + "! " + selectedPlayers + " was not L, " + LUsername + " was!", "gameplay-text-blue");
+                             this.finishedShot = true;
                                 
-                                this.thisRoom.sendText(this.thisRoom.allSockets, "The assassin has shot " + merlinUsername + "! They were correct!", "gameplay-text-red");
-                            }
-                            else {
-                                this.thisRoom.winner = "Resistance";
-                                this.thisRoom.howWasWon = "Mission successes and assassin shot wrong.";
-                                
-                                // console.log("THIS WAS RUN ONCE");
-                                this.thisRoom.sendText(this.thisRoom.allSockets, "The assassin has shot " + selectedPlayers + "! " + selectedPlayers + " was not merlin, " + merlinUsername + " was!", "gameplay-text-blue");
-                            }
-                            
-                            this.finishedShot = true;
-                            
-                            //For gameRecord - get the role that was shot
+                                //For gameRecord - get the role that was shot
                             for (var i = 0; i < this.thisRoom.playersInGame.length; i++) {
                                 if (this.thisRoom.playersInGame[i].username === selectedPlayers) {
                                     this.thisRoom.whoAssassinShot = this.thisRoom.playersInGame[i].role;
@@ -112,93 +106,19 @@ class Assassination {
                             }
                             
                             this.thisRoom.finishGame(this.thisRoom.winner);
+                            }
+                            else {
+                                this.thisRoom.allSockets, "Mikami has assassinated " + LUsername + "! They were correct!", "gameplay-text-red");
+                                this.thisRoom.phase = "MatsudaAssassination"
+                                // console.log("THIS WAS RUN ONCE");
+                          
+                            }                  
                         }
                         else {
                             console.log(selectedPlayers);
                             socket.emit("danger-alert", "Bad assassination data. Tell the admin if you see this!");
                         }
                     }
-                    
-                    // Only shoot Tristan and Isolde together
-                    else if (selectedPlayers.length === 2) {
-                        var i0 = usernamesIndexes.getIndexFromUsername(this.thisRoom.playersInGame, selectedPlayers[0]);
-                        var i1 = usernamesIndexes.getIndexFromUsername(this.thisRoom.playersInGame, selectedPlayers[1]);
-                        // Check the alliance of the target. If they are spy, reject it and ask them to shoot a res.
-                        // Note: Allowed to shoot Oberon
-                        if (this.thisRoom.playersInGame[i0].alliance === "Spy" &&
-                        this.thisRoom.playersInGame[i0].role !== "Oberon") {
-                            socket.emit("danger-alert", "You are not allowed to shoot a known spy.");
-                            return;
-                        }
-                        
-                        if (this.thisRoom.playersInGame[i1].alliance === "Spy" &&
-                        this.thisRoom.playersInGame[i1].role !== "Oberon") {
-                            socket.emit("danger-alert", "You are not allowed to shoot a known spy.");
-                            return;
-                        }
-                        
-                        // Get tristan's username
-                        // Get isolde's username
-                        var tristanUsername = "";
-                        var isoldeUsername = "";
-                        for (var i = 0; i < this.thisRoom.playersInGame.length; i++) {
-                            if (this.thisRoom.playersInGame[i].role === "Tristan") {
-                                tristanUsername = this.thisRoom.playersInGame[i].username;
-                            }
-                            if (this.thisRoom.playersInGame[i].role === "Isolde") {
-                                isoldeUsername = this.thisRoom.playersInGame[i].username;
-                            }
-                        }
-                        
-                        //set the player shot in the assassin role object
-                        this.thisRoom.specialRoles["assassin"].playerShot = selectedPlayers[0];
-                        this.thisRoom.specialRoles["assassin"].playerShot2 = selectedPlayers[1];
-                        
-                        var correctComboShot = false;
-                        if (
-                            (
-                                this.thisRoom.playersInGame[i0].role === "Tristan" &&
-                                this.thisRoom.playersInGame[i1].role === "Isolde"
-                            )
-                            ||
-                            (
-                                this.thisRoom.playersInGame[i1].role === "Tristan" &&
-                                this.thisRoom.playersInGame[i0].role === "Isolde"
-                            )
-                        ) {
-                            this.thisRoom.winner = "Spy";
-                            this.thisRoom.howWasWon = "Assassinated Tristan and Isolde correctly.";
-                            
-                            this.thisRoom.sendText(this.thisRoom.allSockets, "The assassin has shot " + tristanUsername + " and " + isoldeUsername + "! They were correct!", "gameplay-text-red");
-                            
-                        }
-                        else {
-                            this.thisRoom.winner = "Resistance";
-                            this.thisRoom.howWasWon = "Mission successes and assassin shot wrong.";
-                            
-                            // console.log("THIS WAS RUN ONCE");
-                            this.thisRoom.sendText(this.thisRoom.allSockets, "The assassin has shot " + selectedPlayers[0] + " and " + selectedPlayers[1] + "! " + selectedPlayers[0] + " and " + selectedPlayers[1] + " were not Tristan and Isolde, " + tristanUsername + " and " + isoldeUsername + " were!", "gameplay-text-blue");
-                        }
-                        
-                        this.finishedShot = true;
-                        
-                        // console.log("playersInGame");
-                        //For gameRecord - get the role that was shot
-                        for (var i = 0; i < this.thisRoom.playersInGame.length; i++) {
-                            // console.log(this.thisRoom.playersInGame[i].username + " is " + this.thisRoom.playersInGame[i].role);
-                            // console.log("data0: " + data[0]);
-                            // console.log("data1: " + data[1]);
-                            
-                            if (this.thisRoom.playersInGame[i].username === selectedPlayers[0]) {
-                                this.thisRoom.whoAssassinShot = this.thisRoom.playersInGame[i].role;
-                            }
-                            
-                            if (this.thisRoom.playersInGame[i].username === selectedPlayers[1]) {
-                                this.thisRoom.whoAssassinShot2 = this.thisRoom.playersInGame[i].role;
-                            }
-                        }
-                        
-                        this.thisRoom.finishGame(this.thisRoom.winner);
                         
                     }
                 }
