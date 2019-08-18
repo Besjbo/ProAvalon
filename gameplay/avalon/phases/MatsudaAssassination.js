@@ -63,7 +63,7 @@ class LAssassination {
                         
                        
                         //set the player shot in the assassin role object
-                        this.thisRoom.specialRoles["Mikami"].playerShot = selectedPlayers;
+                        this.thisRoom.specialRoles["Mikami"].playerShot4 = selectedPlayers;
                         
                          if (indexOfTarget !== -1) {
                             if (this.thisRoom.playersInGame[indexOfTarget].role === "Matsuda") {
@@ -85,7 +85,7 @@ class LAssassination {
                             //For gameRecord - get the role that was shot
                             for (var i = 0; i < this.thisRoom.playersInGame.length; i++) {
                                 if (this.thisRoom.playersInGame[i].username === selectedPlayers) {
-                                    this.thisRoom.whoAssassinShot = this.thisRoom.playersInGame[i].role;
+                                    this.thisRoom.whoAssassinShot4 = this.thisRoom.playersInGame[i].role;
                                     break;
                                 }
                             }
