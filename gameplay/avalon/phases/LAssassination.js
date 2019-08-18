@@ -62,30 +62,7 @@ class LAssassination {
                                 LUsername = this.thisRoom.playersInGame[i].username;
                             }
                         }
-                        
-                        // Get Matsuda's username
-                        var MatsudaUsername = undefined;
-                        for (var i = 0; i < this.thisRoom.playersInGame.length; i++) {
-                            if (this.thisRoom.playersInGame[i].role === "Matsuda") {
-                                MatsudaUsername = this.thisRoom.playersInGame[i].username;
-                            }
-                        }                       
-                        
-                        // Get Naomi's username
-                        var NaomiUsername = undefined;
-                        for (var i = 0; i < this.thisRoom.playersInGame.length; i++) {
-                            if (this.thisRoom.playersInGame[i].role === "Naomi") {
-                                NaomiUsername = this.thisRoom.playersInGame[i].username;
-                            }
-                        }                        
-                        
-                        // Get Watari's username
-                        var WatariUsername = undefined;
-                        for (var i = 0; i < this.thisRoom.playersInGame.length; i++) {
-                            if (this.thisRoom.playersInGame[i].role === "Watari") {
-                                WatariUsername = this.thisRoom.playersInGame[i].username;
-                            }
-                        }
+                     
                         //set the player shot in the assassin role object
                         this.thisRoom.specialRoles["Mikami"].playerShot = selectedPlayers;
                         
@@ -222,12 +199,12 @@ class LAssassination {
         }
         
         if (indexOfPlayer === indexOfAssassin) {
-            return "Choose someone to assassinate."
+            return "Assassinate L."
         }
         // If it is any other player who isn't special role
         else {
             var usernameOfAssassin = this.thisRoom.playersInGame[indexOfAssassin].username;
-            return "Waiting for " + usernameOfAssassin + " to assassinate."
+            return "Waiting for " + usernameOfAssassin + " to assassinate L."
         }
     }
     
