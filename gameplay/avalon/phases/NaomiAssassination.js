@@ -37,7 +37,7 @@ class NaomiAssassination {
                 var indexOfRequester = usernamesIndexes.getIndexFromUsername(this.thisRoom.playersInGame, socket.request.user.username);
                 if (this.thisRoom.playersInGame[indexOfRequester].role === this.role) {
                     
-                    // Just shoot L
+                    // Just shoot Naomi
                     if (selectedPlayers.length === 1) {
                         if (typeof (selectedPlayers) === "object" || typeof (selectedPlayers) === "array") {
                             selectedPlayers = selectedPlayers[0];
@@ -66,7 +66,7 @@ class NaomiAssassination {
                         this.thisRoom.specialRoles["Mikami"].playerShot = selectedPlayers;
                         
                         if (indexOfTarget !== -1) {
-                            if (this.thisRoom.playersInGame[indexOfTarget].role !== "L") {
+                            if (this.thisRoom.playersInGame[indexOfTarget].role !== "Naomi") {
                                 this.thisRoom.winner = "Detectives";
                                 this.thisRoom.howWasWon = "Naomi survived assassination.";
                               
