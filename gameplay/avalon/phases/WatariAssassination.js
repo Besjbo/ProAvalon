@@ -65,9 +65,9 @@ class LAssassination {
                         this.thisRoom.specialRoles["Mikami"].playerShot = selectedPlayers;
                         
                         if (indexOfTarget !== -1) {
-                            if (this.thisRoom.playersInGame[indexOfTarget].role !== "L") {
+                            if (this.thisRoom.playersInGame[indexOfTarget].role !== "Watari") {
                                 this.thisRoom.winner = "Detectives";
-                                this.thisRoom.howWasWon = "L survived assassination.";
+                                this.thisRoom.howWasWon = "Watari survived assassination.";
                               
                                 this.thisRoom.sendText(this.thisRoom.allSockets, "Mikami tried to assassinate " + selectedPlayers + "! " + selectedPlayers + " was not Watari, " + WatariUsername + " was!", "gameplay-text-blue");
                              this.finishedShot = true;
