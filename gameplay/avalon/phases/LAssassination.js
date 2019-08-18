@@ -245,6 +245,6 @@ class LAssassination {
 }
 
 
-module.exports = Assassination;
+module.exports = LAssassination;
     
         
