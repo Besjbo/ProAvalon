@@ -1,9 +1,9 @@
 var usernamesIndexes = require("../../myFunctions/usernamesIndexes");
 
-function DNVotingMission(thisRoom_) {
+function VotingMission(thisRoom_) {
     this.thisRoom = thisRoom_;
 
-    this.phase = "DNvotingMission";
+    this.phase = "votingMission";
     
     //Set default role to L for successful mission outcomes
     this.role = "L";
@@ -343,4 +343,4 @@ for (var i = 0; i < votes.length; i++) {
 
 
 
-module.exports = DNVotingMission;
+module.exports = VotingMission;
